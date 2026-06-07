@@ -523,12 +523,54 @@ function reveal(n){
   document.getElementById('vf'+n).classList.add('show');
   // Update button
   var btn=document.getElementById('btn'+n);
+  snd.defeat();
   btn.textContent='⚠ Filter defeated';
   btn.disabled=true;
   document.getElementById('rh'+n).textContent='';
   updateUI();
 }
 updateUI();
+
+/* ── AUDIO ENGINE ── */
+const snd=(()=>{
+  let ctx=null;
+  function ac(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+
+  // Navigation whoosh — Next / Back / dots
+  function nav(){
+    const c=ac(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';o.frequency.setValueAtTime(560,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(800,c.currentTime+0.09);
+    g.gain.setValueAtTime(0.07,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.12);
+    o.start();o.stop(c.currentTime+0.12);
+  }
+
+  // Filter defeated — descending sawtooth alarm
+  function defeat(){
+    const c=ac();
+    [0,0.09,0.18,0.27].forEach((dt,i)=>{
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.type='sawtooth';
+      const f=i%2===0?360:280;
+      o.frequency.setValueAtTime(f,c.currentTime+dt);
+      o.frequency.exponentialRampToValueAtTime(f*0.65,c.currentTime+dt+0.08);
+      g.gain.setValueAtTime(0.09,c.currentTime+dt);
+      g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dt+0.09);
+      o.start(c.currentTime+dt);o.stop(c.currentTime+dt+0.09);
+    });
+  }
+
+  return {nav,defeat};
+})();
+
+// Wire nav sounds
+document.getElementById('nextBtn').addEventListener('click',()=>snd.nav());
+document.getElementById('prevBtn').addEventListener('click',()=>snd.nav());
+document.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',()=>snd.nav()));
+
 </script>
 </body>
 </html>
