@@ -138,10 +138,6 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .miss-reveal.shown{display:block;animation:fadeSlide .35s ease;}
 .miss-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:.3rem;font-weight:600;}
 .miss-txt{font-size:13px;color:#FFCFCE;line-height:1.6;}
-.fix-reveal{display:none;margin-top:.4rem;border-radius:5px;padding:.4rem .6rem;background:rgba(55,138,221,.06);border:1px solid rgba(55,138,221,.25);}
-.fix-reveal.shown{display:block;animation:fadeSlide .35s ease;}
-.fix-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--lblue);margin-bottom:.25rem;font-weight:600;}
-.fix-txt{font-size:13px;color:#B5D4F4;line-height:1.6;}
 
 /* bottom bar */
 .reveal-bar{display:flex;align-items:center;gap:.75rem;max-width:980px;width:100%;}
@@ -180,7 +176,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .infocard.shown{display:block;}
 .infocard-inner{
   display:grid;
-  grid-template-columns:1fr 1px 1fr 1px 1fr;
+  grid-template-columns:1fr 1px 1fr;
   gap:0;
 }
 .ic-divider{background:var(--border);}
@@ -195,7 +191,6 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 }
 .ic-label-red{color:var(--red);}
 .ic-label-amber{color:var(--amber);}
-.ic-label-blue{color:var(--lblue);}
 .ic-body{font-size:13px;color:#b0c4de;line-height:1.65;}
 .ic-body strong{color:var(--white);}
 </style>
@@ -305,11 +300,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
             <div class="ic-label ic-label-amber">Why the defense missed it</div>
             <div class="ic-body">The email scanner checks whether content <strong>looks dangerous</strong>. An HTML comment is invisible to a human and invisible to pattern-matching. It contains no malware, no suspicious links, no known threat signatures — so it passes every time.</div>
           </div>
-          <div class="ic-divider"></div>
-          <div class="ic-col">
-            <div class="ic-label ic-label-blue">What good defense looks like</div>
-            <div class="ic-body">Inspect inbound content <strong>for instructions directed at the AI</strong> — not just malware signatures. Anything that looks like a system prompt or task override should be flagged before the agent reads it.</div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -382,11 +373,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
             <div class="ic-label ic-label-amber">Why the defense missed it</div>
             <div class="ic-body">Access control asks <strong>"is this tool registered and permitted?"</strong> — not <strong>"does this tool do what its description claims?"</strong> The tool manifests were correctly registered. Their runtime behavior was not what they advertised.</div>
           </div>
-          <div class="ic-divider"></div>
-          <div class="ic-col">
-            <div class="ic-label ic-label-blue">What good defense looks like</div>
-            <div class="ic-body">Audit and cryptographically sign tool manifests. Verify <strong>what tools actually do at runtime</strong> against their declared behavior — and alert when actual behavior deviates from the description.</div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -458,11 +445,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
             <div class="ic-label ic-label-amber">Why three defenses missed it</div>
             <div class="ic-body">Every tool asks <strong>"was this actor authorized?"</strong> The answer was yes — a legitimate AI agent sent it. None of them ask whether the agent was <strong>acting under attacker instructions</strong>. Authorized actor ≠ safe action.</div>
           </div>
-          <div class="ic-divider"></div>
-          <div class="ic-col">
-            <div class="ic-label ic-label-blue">What good defense looks like</div>
-            <div class="ic-body">Monitor <strong>agent intent and behavior</strong> across the full task — not just whether individual actions were permitted. A legitimate agent sending data to an unknown external address mid-task should trigger an alert.</div>
-          </div>
+          
         </div>
       </div>
     </div>
