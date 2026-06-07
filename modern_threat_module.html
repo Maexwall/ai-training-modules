@@ -612,6 +612,7 @@ function revealInjection(){
   document.getElementById('embedCount').style.color = 'var(--red)';
   document.getElementById('hiddenLayer').classList.add('revealed');
   const btn = document.getElementById('revealBtn');
+  snd.threat();
   btn.textContent = '⚠ Hidden instruction found';
   btn.style.background = 'var(--red)';
   btn.style.color = '#fff';
@@ -631,15 +632,16 @@ function revealTools(){
   btn.disabled = true;
   document.getElementById('flipHint').textContent = 'Watch the agent execute — using tools it trusted.';
   // Staggered feed lines
-  setTimeout(()=>{ document.getElementById('feedLine1').classList.add('shown','hidden-feed'); document.getElementById('feedLine1').style.display='flex'; },600);
-  setTimeout(()=>{ document.getElementById('feedLine2').classList.add('shown','hidden-feed'); document.getElementById('feedLine2').style.display='flex'; },1400);
-  setTimeout(()=>{ document.getElementById('feedLine3').classList.add('shown','hidden-feed'); document.getElementById('feedLine3').style.display='flex'; updateUI(); },2200);
+  setTimeout(()=>{ document.getElementById('feedLine1').classList.add('shown','hidden-feed'); document.getElementById('feedLine1').style.display='flex'; snd.blip(0); },600);
+  setTimeout(()=>{ document.getElementById('feedLine2').classList.add('shown','hidden-feed'); document.getElementById('feedLine2').style.display='flex'; snd.blip(1); },1400);
+  setTimeout(()=>{ document.getElementById('feedLine3').classList.add('shown','hidden-feed'); document.getElementById('feedLine3').style.display='flex'; snd.blip(2); updateUI(); },2200);
 }
 
 // Screen 6: reveal exfil
 function revealExfil(){
   if(exfilRevealed) return;
   exfilRevealed = true;
+  snd.inspect();
   document.getElementById('inspectReveal').classList.add('shown');
   const btn = document.getElementById('inspectBtn');
   btn.textContent = '⚠ Payload detected';
@@ -649,6 +651,76 @@ function revealExfil(){
 }
 
 updateUI();
+
+/* ── AUDIO ENGINE ── */
+const snd=(()=>{
+  let ctx=null;
+  function ac(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+
+  // Soft navigation whoosh — Next / Back / dots
+  function nav(){
+    const c=ac(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';o.frequency.setValueAtTime(580,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(820,c.currentTime+0.09);
+    g.gain.setValueAtTime(0.07,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.12);
+    o.start();o.stop(c.currentTime+0.12);
+  }
+
+  // Glitchy alarm — threat / injection revealed
+  function threat(){
+    const c=ac();
+    [0,0.07,0.14,0.21].forEach((dt,i)=>{
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.type='sawtooth';
+      const f=i%2===0?340:290;
+      o.frequency.setValueAtTime(f,c.currentTime+dt);
+      o.frequency.exponentialRampToValueAtTime(f*0.7,c.currentTime+dt+0.06);
+      g.gain.setValueAtTime(0.09,c.currentTime+dt);
+      g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dt+0.07);
+      o.start(c.currentTime+dt);o.stop(c.currentTime+dt+0.07);
+    });
+  }
+
+  // Data-transfer blip — staggered feed lines appearing
+  function blip(i){
+    const c=ac(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='square';
+    const f=480+(i*90);
+    o.frequency.setValueAtTime(f,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(f*1.15,c.currentTime+0.03);
+    g.gain.setValueAtTime(0.045,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.06);
+    o.start();o.stop(c.currentTime+0.06);
+  }
+
+  // Inspect / exfil detection — low rumble sweep
+  function inspect(){
+    const c=ac();
+    const o=c.createOscillator(),g=c.createGain();
+    const o2=c.createOscillator(),g2=c.createGain();
+    // sweep up
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';o.frequency.setValueAtTime(180,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(440,c.currentTime+0.18);
+    g.gain.setValueAtTime(0.08,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.22);
+    o.start();o.stop(c.currentTime+0.22);
+    // then alarm
+    setTimeout(()=>threat(),260);
+  }
+
+  return {nav,threat,blip,inspect};
+})();
+
+// Wire navigation
+document.getElementById('nextBtn').addEventListener('click',()=>snd.nav());
+document.getElementById('prevBtn').addEventListener('click',()=>snd.nav());
+document.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',()=>snd.nav()));
+
 </script>
 </body>
 </html>
