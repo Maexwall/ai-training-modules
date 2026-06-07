@@ -150,8 +150,10 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .chain-arrow{color:var(--border);font-size:21.6px;}
 .key-points{background:var(--darkcard);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:left;margin-bottom:1.5rem;}
 .kp-h{font-size:15.6px;font-weight:600;color:var(--white);margin-bottom:1rem;}
-.kp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .75rem;}
-.kp-item{font-size:13px;color:#b0c4de;line-height:1.6;display:flex;gap:.4rem;align-items:baseline;}
+.kp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .75rem;}
+.kp-item{font-size:13px;color:#b0c4de;line-height:1.6;display:grid;grid-template-columns:auto auto 1fr;gap:0 .4rem;align-items:baseline;}
+.kp-term{color:var(--white);font-weight:600;white-space:nowrap;}
+.kp-def{color:#b0c4de;}
 .kp-bullet{color:var(--teal);flex-shrink:0;}
 .complete-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:13.2px;letter-spacing:.08em;color:var(--teal);background:rgba(27,189,180,.08);border:1px solid rgba(27,189,180,.3);border-radius:20px;padding:.5rem 1.2rem;}
 </style>
@@ -426,12 +428,12 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
         <div class="key-points">
           <div class="kp-h">Six terms you&#8217;ll hear in every customer conversation</div>
           <div class="kp-grid">
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><strong style="color:var(--white);margin-right:.3rem">Agent</strong>&#8212; AI that acts autonomously toward a goal</div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><strong style="color:var(--white);margin-right:.3rem">Orchestrator</strong>&#8212; the "manager" coordinating other agents</div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><strong style="color:var(--white);margin-right:.3rem">Tool call</strong>&#8212; when the agent uses an external system</div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><strong style="color:var(--white);margin-right:.3rem">Context window</strong>&#8212; what the agent can see at any moment</div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><strong style="color:var(--white);margin-right:.3rem">Human-in-the-loop</strong>&#8212; approval checkpoints in the workflow</div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><strong style="color:var(--white);margin-right:.3rem">Least privilege</strong>&#8212; agents only get the access they need</div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Agent</span><span class="kp-def">&#8212; AI that acts autonomously toward a goal</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Orchestrator</span><span class="kp-def">&#8212; the "manager" coordinating other agents</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Tool call</span><span class="kp-def">&#8212; when the agent uses an external system</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Context window</span><span class="kp-def">&#8212; what the agent can see at any moment</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Human-in-the-loop</span><span class="kp-def">&#8212; approval checkpoints in the workflow</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Least privilege</span><span class="kp-def">&#8212; agents only get the access they need</span></div>
           </div>
         </div>
         <div class="complete-badge">&#10003; Module complete &#8212; Agentic AI for Sales</div>
