@@ -24,9 +24,11 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .chrome-title{font-size:13px;font-weight:500;color:var(--white);}
 .step-indicator{font-family:var(--mono);font-size:10.5px;color:var(--muted);}
 .screens{flex:1;position:relative;overflow:hidden;}
-.screen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:.9rem 1.1rem;gap:.55rem;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s cubic-bezier(.4,0,.2,1);transform:translateX(50px);overflow-y:auto;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:1rem 1.1rem 5rem;gap:.55rem;opacity:0;pointer-events:none;transition:opacity .35s ease,transform .35s cubic-bezier(.4,0,.2,1);transform:translateX(50px);overflow-y:auto;overflow-x:hidden;}
 .screen.active{opacity:1;pointer-events:all;transform:translateX(0);}
 .screen.exit-left{opacity:0;transform:translateX(-50px);}
+/* vertically center content on screens that don't overflow */
+.screen.v-center{justify-content:center;}
 .footer{padding:.45rem 1.1rem;display:flex;align-items:center;justify-content:space-between;background:rgba(10,17,45,.8);border-top:1px solid var(--border);flex-shrink:0;}
 .btn{font-family:var(--sans);font-size:13.5px;font-weight:500;padding:.38rem 1rem;border-radius:5px;border:none;cursor:pointer;transition:all .15s;}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
@@ -209,7 +211,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
   <div class="screens">
 
     <!-- ── S0: INTRO ── -->
-    <div class="screen active" data-screen="0">
+    <div class="screen active v-center" data-screen="0">
       <div class="intro-bg"></div><div class="intro-grid"></div>
       <div class="intro-content">
         <div class="course-tag"><div class="dot-pulse"></div>Agentic AI Security</div>
@@ -225,7 +227,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     </div>
 
     <!-- ── S1: SCENE SET ── -->
-    <div class="screen" data-screen="1">
+    <div class="screen v-center" data-screen="1">
       <div class="scene-card">
         <div class="terminal-bar">
           <div class="t-dot"></div><div class="t-dot"></div><div class="t-dot"></div>
@@ -242,7 +244,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     </div>
 
     <!-- ── S2: ATTACK 1 — INJECTION ── -->
-    <div class="screen" data-screen="2">
+    <div class="screen v-center" data-screen="2">
       <div class="act-header max-w">
         <span class="act-tag act-tag-blue">Attack 1 of 3</span>
         <span class="act-h">Indirect Prompt Injection</span>
@@ -313,7 +315,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     </div>
 
     <!-- ── S3: ATTACK 2 — TOOL COMPROMISE ── -->
-    <div class="screen" data-screen="3">
+    <div class="screen v-center" data-screen="3">
       <div class="act-header max-w">
         <span class="act-tag act-tag-amber">Attack 2 of 3</span>
         <span class="act-h">Tool Compromise</span>
@@ -390,7 +392,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     </div>
 
     <!-- ── S4: ATTACK 3 — EXFIL ── -->
-    <div class="screen" data-screen="4">
+    <div class="screen v-center" data-screen="4">
       <div class="act-header max-w">
         <span class="act-tag act-tag-red">Attack 3 of 3</span>
         <span class="act-h">Data Exfiltration</span>
@@ -466,7 +468,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     </div>
 
     <!-- ── S5: SUMMARY ── -->
-    <div class="screen" data-screen="5">
+    <div class="screen v-center" data-screen="5">
       <div class="summary-wrap">
         <div class="sum-h">Three attacks. Three defenses. Same result.</div>
         <div class="sum-sub">Each tool asked the right question for a different era — and missed every step.</div>
@@ -569,7 +571,11 @@ function reveal(n){
   btn.disabled=true;
   document.getElementById('rh'+n).textContent='';
   document.getElementById('vf'+n).classList.add('shown');
-  document.getElementById('ic'+n).classList.add('shown');
+  if(n!==2){
+    const ic=document.getElementById('ic'+n);
+    ic.classList.add('shown');
+    setTimeout(()=>ic.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
 
   if(n===1){
     document.getElementById('embedCount').textContent='2 (1 hidden)';
@@ -585,7 +591,12 @@ function reveal(n){
     document.querySelector('[data-screen="3"] .v-pass').style.display='none';
     setTimeout(()=>{const f=document.getElementById('fl1');f.classList.add('shown');f.style.display='block';snd.blip(0);},500);
     setTimeout(()=>{const f=document.getElementById('fl2');f.classList.add('shown');f.style.display='block';snd.blip(1);},1200);
-    setTimeout(()=>{const f=document.getElementById('fl3');f.classList.add('shown');f.style.display='block';snd.blip(2);updateUI();},1900);
+    setTimeout(()=>{
+      const f=document.getElementById('fl3');f.classList.add('shown');f.style.display='block';snd.blip(2);
+      const ic=document.getElementById('ic2');ic.classList.add('shown');
+      setTimeout(()=>ic.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+      updateUI();
+    },1900);
     return;
   }
   if(n===3){
