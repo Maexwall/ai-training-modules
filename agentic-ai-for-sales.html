@@ -172,7 +172,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
       <div class="intro-grid"></div>
       <div class="intro-content">
         <div class="course-tag"><div class="dot-pulse"></div>Sales Enablement Module</div>
-        <h1 class="intro-h1">Know the world of<br><span>Agentic AI</span></h1>
+        <h1 class="intro-h1">Know the world<br>your customers<br><span>are building in</span></h1>
         <p class="intro-sub">Your customers are deploying agentic AI — fast. To have credible conversations with them, you need to understand what these systems are, how they work, and the language they use every day.</p>
         <div class="chips">
           <span class="chip chip-teal">What is an agent?</span>
@@ -481,19 +481,88 @@ function runAgent(){
   steps.forEach((id,i)=>{
     setTimeout(()=>{
       if(i>0){const p=document.getElementById(steps[i-1]);p.classList.remove('active');p.classList.add('done');p.querySelector('.si').textContent='\u2713';}
-      const el=document.getElementById(id);el.classList.add('active');el.querySelector('.si').textContent='\u2192';
+      const el=document.getElementById(id);el.classList.add('active');el.querySelector('.si').textContent='\u2192';snd.step();
       if(i===steps.length-1){setTimeout(()=>{
         el.classList.remove('active');el.classList.add('done');el.querySelector('.si').textContent='\u2713';
         document.getElementById('agentResult').classList.add('shown');
         btn.textContent='\u2713 Done in 47 seconds';btn.style.background='var(--green)';btn.style.color='#001a0f';
         document.getElementById('runHint').textContent='No manual steps. The agent handled everything.';
-        agentRun=true;updateUI();
+        snd.done();agentRun=true;updateUI();
       },900);}
     },i*900);
   });
 }
-function toggleGloss(card){card.classList.toggle('open');}
+function toggleGloss(card){card.classList.toggle('open');snd.click();}
 updateUI();
+
+/* ── AUDIO ENGINE (Web Audio API) ── */
+const snd=(()=>{
+  let ctx=null;
+  function ac(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();return ctx;}
+
+  function click(){
+    const c=ac(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(660,c.currentTime+0.06);
+    g.gain.setValueAtTime(0.06,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.08);
+    o.start();o.stop(c.currentTime+0.08);
+  }
+
+  function tick(){
+    const c=ac(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='square';o.frequency.setValueAtTime(440,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(520,c.currentTime+0.03);
+    g.gain.setValueAtTime(0.04,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.05);
+    o.start();o.stop(c.currentTime+0.05);
+  }
+
+  function step(){
+    const c=ac();
+    [0,0.04,0.08].forEach((dt,i)=>{
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.type='square';
+      const f=300+i*70;
+      o.frequency.setValueAtTime(f,c.currentTime+dt);
+      o.frequency.exponentialRampToValueAtTime(f*1.2,c.currentTime+dt+0.025);
+      g.gain.setValueAtTime(0.035,c.currentTime+dt);
+      g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dt+0.04);
+      o.start(c.currentTime+dt);o.stop(c.currentTime+dt+0.05);
+    });
+  }
+
+  function done(){
+    const c=ac();
+    [[0,523],[0.14,659],[0.28,784]].forEach(([dt,freq])=>{
+      const o=c.createOscillator(),g=c.createGain();
+      o.connect(g);g.connect(c.destination);
+      o.type='sine';o.frequency.setValueAtTime(freq,c.currentTime+dt);
+      g.gain.setValueAtTime(0.13,c.currentTime+dt);
+      g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dt+0.38);
+      o.start(c.currentTime+dt);o.stop(c.currentTime+dt+0.4);
+    });
+  }
+
+  function nav(){
+    const c=ac(),o=c.createOscillator(),g=c.createGain();
+    o.connect(g);g.connect(c.destination);
+    o.type='sine';o.frequency.setValueAtTime(600,c.currentTime);
+    o.frequency.exponentialRampToValueAtTime(820,c.currentTime+0.08);
+    g.gain.setValueAtTime(0.07,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+0.11);
+    o.start();o.stop(c.currentTime+0.11);
+  }
+
+  return {click,tick,step,done,nav};
+})();
+
+document.getElementById('nextBtn').addEventListener('click',()=>snd.nav());
+document.getElementById('prevBtn').addEventListener('click',()=>snd.nav());
+document.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',()=>snd.tick()));
 </script>
 </body>
 </html>
