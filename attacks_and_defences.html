@@ -193,6 +193,85 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .ic-label-amber{color:var(--amber);}
 .ic-body{font-size:13px;color:#b0c4de;line-height:1.65;}
 .ic-body strong{color:var(--white);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  /* Fix scroll: disable flex centering so tall content can overflow and scroll */
+  .screen.v-center{justify-content:flex-start;}
+  /* Ensure the screen itself stretches to fit content rather than clipping it */
+  .screen{min-height:100%;height:auto;}
+
+  /* Chrome */
+  .chrome{padding:.4rem .8rem;gap:.3rem;}
+  .chrome-label{display:none;}
+  .chrome-title{font-size:11.5px;text-align:center;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55vw;}
+  .step-indicator{font-size:10px;white-space:nowrap;}
+
+  /* Screens */
+  .screen{padding:.75rem .75rem 4.5rem;}
+
+  /* Footer */
+  .footer{padding:.4rem .75rem;}
+  .btn{font-size:12px;padding:.35rem .75rem;}
+
+  /* Act header */
+  .act-header{gap:.45rem;}
+  .act-h{font-size:15px;}
+  .act-tag{font-size:8.5px;padding:.15rem .5rem;}
+
+  /* Scene card */
+  .scene-card{padding:.85rem 1rem;}
+  .log-line{font-size:11px;gap:.4rem;}
+  .log-time{min-width:36px;}
+  .scene-desc{font-size:12.5px;}
+
+  /* Paired layout — stack vertically */
+  .paired{grid-template-columns:1fr;gap:.5rem;}
+  .pane-body{font-size:12px;padding:.6rem .7rem;}
+  .pane-hd-label{font-size:8.5px;}
+  .email-meta{font-size:10.5px;}
+  .email-txt{font-size:11.5px;}
+  .tool-name{font-size:11px;}
+  .tool-desc{font-size:10.5px;}
+  .feed-mini{font-size:10.5px;}
+  .check-row{font-size:10.5px;}
+  .verdict{font-size:10.5px;padding:.28rem .5rem;}
+
+  /* Reveal bar */
+  .reveal-bar{flex-wrap:wrap;gap:.4rem;}
+  .reveal-hint{font-size:11.5px;}
+
+  /* Infocard — stack columns */
+  .infocard-inner{grid-template-columns:1fr;gap:0;}
+  .ic-divider{height:1px;width:100%;}
+  .ic-col{padding:.55rem .7rem;}
+  .ic-body{font-size:12px;}
+
+  /* Summary */
+  .sum-h{font-size:16px;}
+  .sum-sub{font-size:12px;margin-bottom:.65rem;}
+
+  /* Chain items — stack icon+attack+defense vertically */
+  .chain-item{grid-template-columns:auto 1fr;grid-template-rows:auto auto;}
+  .ci-icon-col{grid-row:1;grid-column:1;font-size:16px;padding:.5rem .6rem;}
+  .ci-attack{grid-row:1;grid-column:2;border-right:none;border-bottom:1px solid var(--border);}
+  .ci-defense{grid-row:2;grid-column:1/-1;border-top:none;}
+  .ci-body{font-size:11.5px;}
+  .ci-tag{font-size:8px;}
+
+  /* Takeaway grid — 1 col */
+  .ta-grid{grid-template-columns:1fr;}
+  .ta-item{font-size:12px;}
+  .takeaway{padding:.6rem .75rem;}
+
+  .complete{font-size:10.5px;}
+}
+
+@media(max-width:420px){
+  .chrome-title{font-size:10.5px;max-width:48vw;}
+  .act-h{font-size:14px;}
+  .paired{gap:.4rem;}
+}
 </style>
 </head>
 <body>
