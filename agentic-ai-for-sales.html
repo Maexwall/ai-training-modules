@@ -117,10 +117,15 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .arch-svg-container{background:var(--darkcard);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1rem;width:100%;}
 
 /* SCREEN 4: GLOSSARY */
+.glossary-instruction{display:flex;align-items:center;gap:.6rem;background:rgba(27,189,180,.07);border:1px solid rgba(27,189,180,.25);border-radius:8px;padding:.65rem 1rem;width:100%;max-width:900px;margin-bottom:.75rem;}
+.glossary-instruction-icon{font-size:16px;flex-shrink:0;line-height:1;}
+.glossary-instruction-text{font-size:13.8px;color:var(--lteal);line-height:1.4;}
+.glossary-instruction-text strong{color:var(--teal);font-weight:600;}
 .glossary-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;width:100%;max-width:900px;}
-.gloss-card{background:var(--darkcard);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .2s,background .2s;user-select:none;}
-.gloss-card:hover{border-color:rgba(55,138,221,.4);}
-.gloss-card.open{border-color:rgba(55,138,221,.5);background:rgba(55,138,221,.05);}
+.gloss-card{background:var(--darkcard);border:1px solid rgba(55,138,221,.25);border-radius:10px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .18s,background .18s,transform .15s,box-shadow .18s;user-select:none;position:relative;}
+.gloss-card::after{content:'';position:absolute;inset:0;border-radius:10px;box-shadow:0 0 0 0 rgba(55,138,221,0);transition:box-shadow .18s;}
+.gloss-card:hover{border-color:rgba(55,138,221,.55);background:rgba(55,138,221,.06);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3);}
+.gloss-card.open{border-color:rgba(55,138,221,.6);background:rgba(55,138,221,.08);transform:translateY(-2px);box-shadow:0 6px 24px rgba(24,95,165,.25);}
 .gloss-term{display:flex;align-items:center;gap:.6rem;}
 .gloss-badge{font-family:var(--mono);font-size:10.8px;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .55rem;border-radius:3px;border:1px solid;flex-shrink:0;}
 .gb-teal{color:var(--teal);border-color:rgba(27,189,180,.4);background:rgba(27,189,180,.08);}
@@ -128,11 +133,19 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 .gb-blue{color:var(--lblue);border-color:rgba(55,138,221,.4);background:rgba(55,138,221,.08);}
 .gb-purple{color:var(--purple);border-color:rgba(127,119,221,.4);background:rgba(127,119,221,.08);}
 .gb-green{color:var(--green);border-color:rgba(46,158,107,.4);background:rgba(46,158,107,.08);}
+.gloss-word-row{display:flex;align-items:center;justify-content:space-between;flex:1;gap:.4rem;}
 .gloss-word{font-size:15.6px;font-weight:600;color:var(--white);}
-.gloss-short{font-size:14.4px;color:var(--muted);margin-top:.35rem;line-height:1.5;}
-.gloss-expand{font-size:14.4px;color:#b0c4de;line-height:1.75;margin-top:.65rem;padding-top:.65rem;border-top:1px solid var(--border);display:none;}
+.gloss-chevron{font-size:13px;color:var(--muted);transition:transform .25s,color .18s;flex-shrink:0;line-height:1;}
+.gloss-card.open .gloss-chevron{transform:rotate(180deg);color:var(--lblue);}
+.gloss-short{font-size:14.4px;color:var(--muted);margin-top:.4rem;line-height:1.55;}
+.gloss-expand{font-size:14.4px;color:#b0c4de;line-height:1.75;margin-top:.65rem;padding-top:.65rem;border-top:1px solid rgba(55,138,221,.2);display:none;}
+.gloss-expand-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--lblue);margin-bottom:.3rem;}
 .gloss-card.open .gloss-expand{display:block;animation:fadeSlide .25s ease;}
-.gloss-hint{font-family:var(--mono);font-size:10.8px;letter-spacing:.08em;color:var(--muted);text-align:center;margin-top:.35rem;}
+.gloss-progress{display:flex;align-items:center;gap:.5rem;width:100%;max-width:900px;margin-top:.5rem;}
+.gloss-progress-text{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--muted);}
+.gloss-progress-dots{display:flex;gap:4px;margin-left:auto;}
+.gloss-pdot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s;}
+.gloss-pdot.seen{background:var(--teal);}
 
 /* SCREEN 5 */
 .summary-wrap{width:100%;max-width:900px;text-align:center;}
@@ -353,46 +366,74 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
         <span class="act-tag act-tag-green">Module 4 of 4</span>
         <span class="act-h">Key terminology &#8212; words you&#8217;ll hear constantly</span>
       </div>
-      <div class="glossary-grid max-w">
+      <div class="glossary-instruction max-w">
+        <span class="glossary-instruction-icon">👆</span>
+        <span class="glossary-instruction-text"><strong>Click any term</strong> to expand a real-world example from customer conversations</span>
+      </div>
+      <div class="glossary-grid max-w" id="glossGrid">
 
         <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term"><span class="gloss-badge gb-teal">Core</span><span class="gloss-word">Agent</span></div>
+          <div class="gloss-term">
+            <span class="gloss-badge gb-teal">Core</span>
+            <div class="gloss-word-row"><span class="gloss-word">Agent</span><span class="gloss-chevron">&#9660;</span></div>
+          </div>
           <div class="gloss-short">AI that pursues a goal autonomously — planning and acting across many steps without a human directing each one.</div>
-          <div class="gloss-expand">e.g. "Book me a flight, find a hotel, and send me the itinerary" — completed end-to-end, no hand-holding.</div>
+          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>&#8220;Book me a flight, find a hotel, and send me the itinerary&#8221; — completed end-to-end, no hand-holding.</div>
         </div>
 
         <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term"><span class="gloss-badge gb-teal">Core</span><span class="gloss-word">Orchestrator</span></div>
+          <div class="gloss-term">
+            <span class="gloss-badge gb-teal">Core</span>
+            <div class="gloss-word-row"><span class="gloss-word">Orchestrator</span><span class="gloss-chevron">&#9660;</span></div>
+          </div>
           <div class="gloss-short">The "manager" agent that breaks down a goal and delegates sub-tasks to specialist agents.</div>
-          <div class="gloss-expand">e.g. One orchestrator coordinates a research agent, a writing agent, and a send agent — each doing one thing well.</div>
+          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>One orchestrator coordinates a research agent, a writing agent, and a send agent — each doing one thing well.</div>
         </div>
 
         <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term"><span class="gloss-badge gb-amber">Architecture</span><span class="gloss-word">Tool call</span></div>
+          <div class="gloss-term">
+            <span class="gloss-badge gb-amber">Architecture</span>
+            <div class="gloss-word-row"><span class="gloss-word">Tool call</span><span class="gloss-chevron">&#9660;</span></div>
+          </div>
           <div class="gloss-short">When an agent reaches into a real system — an API, database, inbox, or file — to read or take action.</div>
-          <div class="gloss-expand">e.g. Querying a CRM, sending an email, or booking via a travel API are all tool calls. Each one is a real-world action.</div>
+          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>Querying a CRM, sending an email, or booking via a travel API are all tool calls. Each one is a real-world action.</div>
         </div>
 
         <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term"><span class="gloss-badge gb-amber">Architecture</span><span class="gloss-word">Context window</span></div>
+          <div class="gloss-term">
+            <span class="gloss-badge gb-amber">Architecture</span>
+            <div class="gloss-word-row"><span class="gloss-word">Context window</span><span class="gloss-chevron">&#9660;</span></div>
+          </div>
           <div class="gloss-short">Everything the agent can "see" at once: the task, past steps, tool results, and instructions.</div>
-          <div class="gloss-expand">e.g. Like a desk — the agent can only work with what's on it. Information not in the window is effectively invisible to it.</div>
+          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>Like a desk — the agent can only work with what&#8217;s on it. Information not in the window is invisible to it.</div>
         </div>
 
         <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term"><span class="gloss-badge gb-blue">Behaviour</span><span class="gloss-word">Human-in-the-loop</span></div>
+          <div class="gloss-term">
+            <span class="gloss-badge gb-blue">Behaviour</span>
+            <div class="gloss-word-row"><span class="gloss-word">Human-in-the-loop</span><span class="gloss-chevron">&#9660;</span></div>
+          </div>
           <div class="gloss-short">A checkpoint where the agent pauses and waits for human approval before proceeding.</div>
-          <div class="gloss-expand">e.g. "Before you send that external email, confirm with me first." Gives oversight without removing automation.</div>
+          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>&#8220;Before you send that external email, confirm with me first.&#8221; Oversight without removing automation.</div>
         </div>
 
         <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term"><span class="gloss-badge gb-green">Trust</span><span class="gloss-word">Least privilege</span></div>
+          <div class="gloss-term">
+            <span class="gloss-badge gb-green">Trust</span>
+            <div class="gloss-word-row"><span class="gloss-word">Least privilege</span><span class="gloss-chevron">&#9660;</span></div>
+          </div>
           <div class="gloss-short">An agent should only have access to what it needs for its specific task — nothing more.</div>
-          <div class="gloss-expand">e.g. An agent that reads emails shouldn't also be able to delete them or access finance systems. Scope = safety.</div>
+          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>An agent that reads emails shouldn&#8217;t also be able to delete them or access finance systems. Scope = safety.</div>
         </div>
 
       </div>
-      <div class="gloss-hint">Tap any term for an example</div>
+      <div class="gloss-progress max-w">
+        <span class="gloss-progress-text" id="glossProgressText">0 of 6 opened</span>
+        <div class="gloss-progress-dots" id="glossDots">
+          <div class="gloss-pdot"></div><div class="gloss-pdot"></div><div class="gloss-pdot"></div>
+          <div class="gloss-pdot"></div><div class="gloss-pdot"></div><div class="gloss-pdot"></div>
+        </div>
+      </div>
     </div>
 
     <!-- SCREEN 5: SUMMARY -->
@@ -494,7 +535,19 @@ function runAgent(){
     },i*900);
   });
 }
-function toggleGloss(card){card.classList.toggle('open');snd.click();}
+function toggleGloss(card){
+  card.classList.toggle('open');
+  snd.click();
+  const cards=document.querySelectorAll('#glossGrid .gloss-card');
+  const dots=document.querySelectorAll('#glossDots .gloss-pdot');
+  let seen=0;
+  cards.forEach((c,i)=>{
+    if(c.classList.contains('open')){seen++;if(dots[i])dots[i].classList.add('seen');}
+    else{if(dots[i])dots[i].classList.remove('seen');}
+  });
+  const txt=document.getElementById('glossProgressText');
+  if(txt)txt.textContent=seen+' of 6 opened';
+}
 updateUI();
 
 /* ── AUDIO ENGINE (Web Audio API) ── */
