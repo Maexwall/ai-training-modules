@@ -9,165 +9,170 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --dark:#12172A;--darkcard:#1A2240;
+  --dark:#10222C;--darkcard:#16242E;--darkcard2:#1A2F3B;
   --blue:#185FA5;--lblue:#378ADD;
-  --amber:#EF9F27;
-  --teal:#1BBDB4;--lteal:#A0ECE9;
-  --green:#2E9E6B;
-  --purple:#7F77DD;
-  --white:#F0F4FF;--muted:#8BA8C8;--border:#1F2E5A;
-  --mono:'IBM Plex Mono',monospace;--sans:'Sora',sans-serif;
+  --amber:#FEAF00;
+  --teal:#328096;--lteal:#7FC4D6;
+  --green:#5B9A3C;
+  --red:#C5192E;--reddark:#1A0305;--purple:#7F77DD;
+  --white:#F0F4FF;--muted:#6B8FA6;--border:#2A4456;
+  --mono:'IBM Plex Mono',monospace;--sans:Arial,'Helvetica Neue',Helvetica,sans-serif;
 }
 html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(--white);overflow:hidden}
 .shell{position:fixed;inset:0;display:flex;flex-direction:column;}
 .progress-bar{height:3px;background:var(--border);flex-shrink:0;z-index:10;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .5s cubic-bezier(.4,0,.2,1);}
-.chrome{display:flex;align-items:center;justify-content:space-between;padding:.65rem 2rem;background:rgba(13,27,75,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);flex-shrink:0;z-index:10;}
+.progress-fill{height:100%;background:var(--amber);transition:width .5s cubic-bezier(.4,0,.2,1);}
+.chrome{display:flex;align-items:center;justify-content:space-between;padding:.65rem 2rem;background:var(--dark);border-bottom:1px solid var(--border);flex-shrink:0;z-index:10;}
+.chrome-brand{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+.brand-dots{display:grid;grid-template-columns:repeat(3,4px);grid-template-rows:repeat(2,4px);gap:2px;}
+.brand-dots i{width:4px;height:4px;border-radius:50%;background:var(--white);display:block;}
+.brand-dots i:nth-child(1){background:var(--white);}
+.brand-dots i:nth-child(2){background:var(--white);}
+.brand-dots i:nth-child(3){background:var(--red);}
+.brand-dots i:nth-child(4){background:var(--white);}
+.brand-dots i:nth-child(5){background:var(--white);}
+.brand-dots i:nth-child(6){background:var(--white);}
+.brand-word{font-family:var(--sans);font-size:17px;font-weight:400;color:var(--white);letter-spacing:.01em;}
 .chrome-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;}
-.chrome-title{font-size:14.4px;font-weight:500;color:var(--white);letter-spacing:.04em;}
+.chrome-title{font-size:14.4px;font-weight:700;color:var(--white);letter-spacing:.02em;}
 .step-indicator{font-family:var(--mono);font-size:12px;color:var(--muted);}
 .screens{flex:1;position:relative;overflow:hidden;}
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .45s ease,transform .45s cubic-bezier(.4,0,.2,1);transform:translateX(60px);overflow-y:auto;}
 .screen.active{opacity:1;pointer-events:all;transform:translateX(0);}
 .screen.exit-left{opacity:0;transform:translateX(-60px);}
-.footer{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;background:rgba(13,27,75,.7);border-top:1px solid var(--border);flex-shrink:0;}
-.btn{font-family:var(--sans);font-size:15.6px;font-weight:500;padding:.55rem 1.4rem;border-radius:6px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.02em;}
+.footer{padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;background:var(--dark);border-top:1px solid var(--border);flex-shrink:0;}
+.btn{font-family:var(--sans);font-size:15.6px;font-weight:700;padding:.55rem 1.4rem;border-radius:3px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.02em;}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border);}
 .btn-ghost:hover{border-color:var(--muted);color:var(--white);}
-.btn-primary{background:var(--blue);color:var(--white);}
-.btn-primary:hover{background:var(--lblue);}
+.btn-primary{background:var(--red);color:var(--white);}
+.btn-primary:hover{background:#E0223A;}
 .btn-primary:disabled{opacity:.35;cursor:default;}
-.btn-teal{background:var(--teal);color:#001a18;font-weight:600;}
-.btn-teal:hover{filter:brightness(1.1);}
+.btn-teal{background:var(--amber);color:#1A0F00;font-weight:700;}
+.btn-teal:hover{filter:brightness(1.08);}
 .dot-nav{display:flex;gap:6px;align-items:center;}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:all .3s;cursor:pointer;}
-.dot.active{background:var(--teal);transform:scale(1.4);}
-.dot.done{background:var(--blue);}
+.dot.active{background:var(--amber);transform:scale(1.4);}
+.dot.done{background:var(--red);}
 .max-w{max-width:900px;width:100%;}
 @keyframes fadeSlide{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
 
+/* ── SPEAKER AUDIO BAR ── */
+.audio-bar{display:flex;align-items:center;gap:.75rem;width:100%;background:var(--darkcard2);border:1px solid var(--amber);border-radius:3px;padding:.55rem .9rem;margin-bottom:1rem;flex-shrink:0;}
+.audio-bar.max-w{max-width:900px;}
+.audio-play-btn{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:var(--amber);color:#1A0F00;border:none;cursor:pointer;flex-shrink:0;font-size:13px;transition:filter .15s;}
+.audio-play-btn:hover{filter:brightness(1.08);}
+.audio-play-btn.playing{background:var(--red);color:#fff;}
+.audio-meta{display:flex;flex-direction:column;gap:.15rem;flex:1;min-width:0;}
+.audio-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);font-weight:700;}
+.audio-progress-track{height:3px;border-radius:0;background:var(--border);overflow:hidden;}
+.audio-progress-fill{height:100%;width:0%;background:var(--amber);transition:width .1s linear;}
+.audio-time{font-family:var(--mono);font-size:10.5px;color:var(--muted);flex-shrink:0;}
+
+/* ── FOOTER STRIPE (matches deck's diagonal brand bar) ── */
+.footer-stripe{position:fixed;left:0;right:0;bottom:0;height:6px;display:flex;z-index:5;pointer-events:none;}
+.footer-stripe i{flex:1;display:block;transform:skewX(-22deg);margin-right:-1px;}
+.footer-stripe i:nth-child(1){background:#1C7293;}
+.footer-stripe i:nth-child(2){background:#1A0305;}
+.footer-stripe i:nth-child(3){background:#C5192E;}
+.footer-stripe i:nth-child(4){background:#6B8FA6;}
+.footer-stripe i:nth-child(5){background:#FEAF00;}
+.footer-stripe i:nth-child(6){background:#7FC4D6;}
+
 /* SCREEN 0 */
-.intro-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(24,95,165,.18) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(27,189,180,.12) 0%,transparent 55%);pointer-events:none;}
-.intro-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.25;pointer-events:none;}
+.intro-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(197,25,46,.14) 0%,transparent 60%),radial-gradient(ellipse at 75% 30%,rgba(254,175,0,.08) 0%,transparent 55%);pointer-events:none;}
+.intro-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:48px 48px;opacity:.2;pointer-events:none;}
 .intro-content{position:relative;text-align:center;max-width:640px;}
-.course-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--teal);background:rgba(27,189,180,.1);border:1px solid rgba(27,189,180,.3);border-radius:20px;padding:.35rem .9rem;margin-bottom:1.75rem;text-transform:uppercase;}
-.dot-pulse{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 1.8s ease infinite;}
-.intro-h1{font-size:clamp(26px,4vw,44px);font-weight:700;line-height:1.1;margin-bottom:.75rem;}
-.intro-h1 span{color:var(--teal);}
-.intro-sub{font-size:18px;color:var(--muted);line-height:1.7;max-width:500px;margin:0 auto 2rem;font-weight:300;}
-.chips{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;}
-.chip{font-family:var(--mono);font-size:12px;letter-spacing:.08em;padding:.3rem .75rem;border-radius:4px;border:1px solid;}
-.chip-teal{color:var(--teal);border-color:rgba(27,189,180,.4);background:rgba(27,189,180,.08);}
-.chip-blue{color:var(--lblue);border-color:rgba(55,138,221,.4);background:rgba(55,138,221,.08);}
-.chip-amber{color:var(--amber);border-color:rgba(239,159,39,.4);background:rgba(239,159,39,.08);}
-.chip-green{color:var(--green);border-color:rgba(46,158,107,.4);background:rgba(46,158,107,.08);}
+.course-tag{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.12em;color:#1A0F00;background:var(--amber);border-radius:0;padding:.4rem 1rem;margin-bottom:1.75rem;text-transform:uppercase;}
+.dot-pulse{width:6px;height:6px;border-radius:50%;background:#1A0F00;animation:pulse 1.8s ease infinite;}
+.intro-h1{font-size:clamp(26px,4vw,44px);font-weight:700;line-height:1.12;margin-bottom:.75rem;letter-spacing:-.01em;}
+.intro-h1 span{color:var(--amber);}
+.intro-sub{font-size:17px;color:var(--muted);line-height:1.7;max-width:500px;margin:0 auto 2rem;font-weight:400;}
+.chips{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;}
+.chip{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:.35rem .8rem;border-radius:0;border:1px solid;}
+.chip-teal{color:var(--white);border-color:var(--teal);background:rgba(50,128,150,.25);}
+.chip-blue{color:var(--white);border-color:var(--lblue);background:rgba(55,138,221,.2);}
+.chip-amber{color:#1A0F00;border-color:var(--amber);background:var(--amber);}
+.chip-green{color:var(--white);border-color:var(--green);background:rgba(91,154,60,.25);}
 
 /* SHARED */
-.act-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1.4rem;width:100%;}
-.act-tag{font-family:var(--mono);font-size:10.8px;letter-spacing:.12em;text-transform:uppercase;padding:.3rem .75rem;border-radius:4px;border:1px solid;}
-.act-tag-blue{color:var(--lblue);border-color:rgba(55,138,221,.5);background:rgba(55,138,221,.08);}
-.act-tag-teal{color:var(--teal);border-color:rgba(27,189,180,.5);background:rgba(27,189,180,.08);}
-.act-tag-amber{color:var(--amber);border-color:rgba(239,159,39,.5);background:rgba(239,159,39,.08);}
-.act-tag-green{color:var(--green);border-color:rgba(46,158,107,.5);background:rgba(46,158,107,.08);}
-.act-h{font-size:24px;font-weight:600;color:var(--white);}
-.callout{border-radius:8px;padding:.9rem 1.1rem;font-size:15.6px;line-height:1.7;margin-top:1rem;}
-.callout-teal{background:rgba(27,189,180,.08);border-left:3px solid var(--teal);color:var(--lteal);}
+.act-header{display:flex;align-items:center;gap:.85rem;margin-bottom:1.4rem;width:100%;}
+.act-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .85rem;border-radius:0;color:var(--white);}
+.act-tag-blue{background:var(--blue);}
+.act-tag-teal{background:var(--teal);}
+.act-tag-amber{background:var(--amber);color:#1A0F00;}
+.act-tag-green{background:var(--green);}
+.act-h{font-size:23px;font-weight:700;color:var(--white);letter-spacing:-.005em;}
+.callout{border-radius:0;padding:.9rem 1.1rem;font-size:15.2px;line-height:1.7;margin-top:1rem;border:1px solid var(--border);}
+.callout-teal{background:var(--darkcard2);border-left:4px solid var(--amber);color:#FFE0A3;}
+
+/* SCREEN-TITLE RULE — thick flat bar under every act-header, like the deck */
+.act-rule{height:4px;background:var(--amber);width:100%;margin:-.9rem 0 1.1rem;}
 
 /* SCREEN 1 */
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;max-width:860px;}
-.cmp-card{background:var(--darkcard);border:1px solid var(--border);border-radius:10px;padding:1.5rem;}
-.cmp-card.hl{border-color:rgba(27,189,180,.4);background:rgba(27,189,180,.04);}
-.cmp-label{font-family:var(--mono);font-size:10.8px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:1rem;}
+.cmp-card{background:var(--darkcard);border:1px solid var(--border);border-radius:0;padding:1.4rem;}
+.cmp-card.hl{border-color:var(--amber);background:var(--darkcard2);border-width:1px;}
+.cmp-label{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;}
 .cmp-label-muted{color:var(--muted);}
-.cmp-label-teal{color:var(--teal);}
-.cmp-icon{font-size:31.2px;margin-bottom:.75rem;}
-.cmp-title{font-size:18px;font-weight:600;margin-bottom:.5rem;}
-.cmp-desc{font-size:15px;color:#b0c4de;line-height:1.8;}
+.cmp-label-teal{color:var(--amber);}
+.cmp-icon{font-size:28px;margin-bottom:.7rem;}
+.cmp-title{font-size:17.5px;font-weight:700;margin-bottom:.5rem;}
+.cmp-desc{font-size:14.6px;color:#b0c4de;line-height:1.75;}
 .cmp-list{list-style:none;margin-top:.75rem;}
-.cmp-list li{font-size:14.4px;color:var(--muted);line-height:2.1;display:flex;gap:.5rem;}
+.cmp-list li{font-size:14px;color:var(--muted);line-height:2;display:flex;gap:.5rem;}
 .cmp-list li::before{content:'·';flex-shrink:0;}
-.cmp-list.teal li::before{content:'→';color:var(--teal);}
+.cmp-list.teal li::before{content:'→';color:var(--amber);font-weight:700;}
 .cmp-list.teal li{color:#b0c4de;}
 
 /* SCREEN 2 */
 .scenario-wrap{width:100%;max-width:900px;display:flex;flex-direction:column;gap:1rem;}
 .scenario-top{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
-.task-card{background:var(--darkcard);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.task-card{background:var(--darkcard);border:1px solid var(--border);border-radius:0;overflow:hidden;}
 .task-header{padding:.65rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem;}
-.task-label{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;}
-.task-body{padding:1.1rem;font-size:15.6px;color:#b0c4de;line-height:1.8;}
+.task-label{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.task-body{padding:1.1rem;font-size:15px;color:#b0c4de;line-height:1.75;}
 .task-body strong{color:var(--white);}
-.task-body em{color:var(--muted);font-style:normal;font-size:14.4px;}
-.agent-steps{background:var(--darkcard);border:1px solid var(--border);border-radius:10px;padding:1.1rem;font-family:var(--mono);font-size:13.8px;font-weight:500;}
-.steps-title{font-size:10.8px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem;}
+.task-body em{color:var(--muted);font-style:normal;font-size:13.8px;}
+.agent-steps{background:var(--darkcard);border:1px solid var(--border);border-radius:0;padding:1.1rem;font-family:var(--mono);font-size:13.5px;font-weight:500;}
+.steps-title{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem;}
 .step-row{display:flex;gap:.75rem;align-items:flex-start;line-height:1.9;color:var(--muted);}
 .step-row.done{color:var(--white);}
-.step-row.active{color:var(--teal);}
+.step-row.active{color:var(--amber);}
 .step-row .si{flex-shrink:0;width:16px;text-align:center;}
 .step-row.done .si{color:var(--green);}
-.step-row.active .si{color:var(--teal);}
-.step-result{margin-top:1rem;padding:.75rem 1rem;border-radius:8px;background:rgba(46,158,107,.08);border:1px solid rgba(46,158,107,.3);font-size:14.4px;color:#A8E8CC;display:none;animation:fadeSlide .4s ease forwards;}
+.step-row.active .si{color:var(--amber);}
+.step-result{margin-top:1rem;padding:.75rem 1rem;border-radius:0;background:var(--darkcard2);border:1px solid var(--green);border-left:4px solid var(--green);font-size:14px;color:#B9E89A;display:none;animation:fadeSlide .4s ease forwards;}
 .step-result.shown{display:block;}
 .run-btn-wrap{display:flex;justify-content:flex-start;align-items:center;gap:1rem;margin-top:.5rem;}
 
 /* SCREEN 3 */
 .arch-wrap{width:100%;max-width:900px;display:flex;flex-direction:column;gap:.85rem;}
-.arch-label{font-family:var(--mono);font-size:10.8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;}
-.arch-svg-container{background:var(--darkcard);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1rem;width:100%;}
-
-/* SCREEN 4: GLOSSARY */
-.glossary-instruction{display:flex;align-items:center;gap:.6rem;background:rgba(27,189,180,.07);border:1px solid rgba(27,189,180,.25);border-radius:8px;padding:.65rem 1rem;width:100%;max-width:900px;margin-bottom:.75rem;}
-.glossary-instruction-icon{font-size:16px;flex-shrink:0;line-height:1;}
-.glossary-instruction-text{font-size:13.8px;color:var(--lteal);line-height:1.4;}
-.glossary-instruction-text strong{color:var(--teal);font-weight:600;}
-.glossary-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;width:100%;max-width:900px;}
-.gloss-card{background:var(--darkcard);border:1px solid rgba(55,138,221,.25);border-radius:10px;padding:1rem 1.1rem;cursor:pointer;transition:border-color .18s,background .18s,transform .15s,box-shadow .18s;user-select:none;position:relative;}
-.gloss-card::after{content:'';position:absolute;inset:0;border-radius:10px;box-shadow:0 0 0 0 rgba(55,138,221,0);transition:box-shadow .18s;}
-.gloss-card:hover{border-color:rgba(55,138,221,.55);background:rgba(55,138,221,.06);transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3);}
-.gloss-card.open{border-color:rgba(55,138,221,.6);background:rgba(55,138,221,.08);transform:translateY(-2px);box-shadow:0 6px 24px rgba(24,95,165,.25);}
-.gloss-term{display:flex;align-items:center;gap:.6rem;}
-.gloss-badge{font-family:var(--mono);font-size:10.8px;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .55rem;border-radius:3px;border:1px solid;flex-shrink:0;}
-.gb-teal{color:var(--teal);border-color:rgba(27,189,180,.4);background:rgba(27,189,180,.08);}
-.gb-amber{color:var(--amber);border-color:rgba(239,159,39,.4);background:rgba(239,159,39,.08);}
-.gb-blue{color:var(--lblue);border-color:rgba(55,138,221,.4);background:rgba(55,138,221,.08);}
-.gb-purple{color:var(--purple);border-color:rgba(127,119,221,.4);background:rgba(127,119,221,.08);}
-.gb-green{color:var(--green);border-color:rgba(46,158,107,.4);background:rgba(46,158,107,.08);}
-.gloss-word-row{display:flex;align-items:center;justify-content:space-between;flex:1;gap:.4rem;}
-.gloss-word{font-size:15.6px;font-weight:600;color:var(--white);}
-.gloss-chevron{font-size:13px;color:var(--muted);transition:transform .25s,color .18s;flex-shrink:0;line-height:1;}
-.gloss-card.open .gloss-chevron{transform:rotate(180deg);color:var(--lblue);}
-.gloss-short{font-size:14.4px;color:var(--muted);margin-top:.4rem;line-height:1.55;}
-.gloss-expand{font-size:14.4px;color:#b0c4de;line-height:1.75;margin-top:.65rem;padding-top:.65rem;border-top:1px solid rgba(55,138,221,.2);display:none;}
-.gloss-expand-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--lblue);margin-bottom:.3rem;}
-.gloss-card.open .gloss-expand{display:block;animation:fadeSlide .25s ease;}
-.gloss-progress{display:flex;align-items:center;gap:.5rem;width:100%;max-width:900px;margin-top:.5rem;}
-.gloss-progress-dots{display:flex;gap:4px;}
-.gloss-pdot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .3s;}
-.gloss-pdot.seen{background:var(--teal);}
+.arch-label{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.arch-svg-container{background:var(--darkcard);border:1px solid var(--border);border-radius:0;padding:1.5rem 1rem;width:100%;}
 
 /* SCREEN 5 */
 .summary-wrap{width:100%;max-width:900px;text-align:center;}
-.summary-h{font-size:clamp(20px,3vw,28px);font-weight:700;margin-bottom:.4rem;}
-.summary-sub{font-size:16.8px;color:var(--muted);margin-bottom:1.75rem;}
+.summary-h{font-size:clamp(20px,3vw,28px);font-weight:700;margin-bottom:.4rem;letter-spacing:-.01em;}
+.summary-sub{font-size:16px;color:var(--muted);margin-bottom:1.75rem;}
 .concept-chain{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:.5rem;margin-bottom:1.25rem;}
-.cc-node{background:var(--darkcard);border:1px solid var(--border);border-radius:10px;padding:.75rem .9rem;text-align:center;}
-.cc-icon{font-size:26.4px;margin-bottom:.4rem;}
-.cc-lbl{font-family:var(--mono);font-size:10.8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.25rem;}
+.cc-node{background:var(--darkcard);border:1px solid var(--border);border-radius:0;padding:.75rem .9rem;text-align:center;border-top:3px solid var(--amber);}
+.cc-icon{font-size:25px;margin-bottom:.4rem;}
+.cc-lbl{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.25rem;}
 .cc-lbl-blue{color:var(--lblue);}
 .cc-lbl-amber{color:var(--amber);}
-.cc-lbl-teal{color:var(--teal);}
+.cc-lbl-teal{color:var(--amber);}
 .cc-lbl-green{color:var(--green);}
-.cc-desc{font-size:13.2px;color:var(--muted);line-height:1.6;}
-.chain-arrow{color:var(--border);font-size:21.6px;}
-.key-points{background:var(--darkcard);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:left;margin-bottom:1.5rem;}
-.kp-h{font-size:15.6px;font-weight:600;color:var(--white);margin-bottom:1rem;}
+.cc-desc{font-size:12.8px;color:var(--muted);line-height:1.6;}
+.chain-arrow{color:var(--muted);font-size:20px;}
+.key-points{background:var(--darkcard);border:1px solid var(--border);border-radius:0;padding:1.5rem;text-align:left;margin-bottom:1.5rem;border-left:4px solid var(--red);}
+.kp-h{font-size:15.2px;font-weight:700;color:var(--white);margin-bottom:1rem;}
 .kp-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem .75rem;}
 .kp-item{font-size:13px;color:#b0c4de;line-height:1.6;display:grid;grid-template-columns:auto auto 1fr;gap:0 .4rem;align-items:baseline;}
-.kp-term{color:var(--white);font-weight:600;white-space:nowrap;}
+.kp-term{color:var(--white);font-weight:700;white-space:nowrap;}
 .kp-def{color:#b0c4de;}
-.kp-bullet{color:var(--teal);flex-shrink:0;}
-.complete-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:13.2px;letter-spacing:.08em;color:var(--teal);background:rgba(27,189,180,.08);border:1px solid rgba(27,189,180,.3);border-radius:20px;padding:.5rem 1.2rem;}
+.kp-bullet{color:var(--amber);flex-shrink:0;font-weight:700;}
+.complete-badge{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:12.5px;font-weight:700;letter-spacing:.06em;color:#1A0F00;background:var(--amber);border-radius:0;padding:.55rem 1.3rem;}
 
 /* ── RESPONSIVE ── */
 @media(max-width:700px){
@@ -214,15 +219,7 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
   .arch-svg-container svg{min-width:560px;}
   .arch-label{font-size:9.5px;}
 
-  /* Screen 4: Glossary — stack to 1 col */
-  .glossary-grid{grid-template-columns:1fr;}
-  .glossary-instruction{padding:.5rem .75rem;}
-  .glossary-instruction-text{font-size:12.5px;}
-  .gloss-word{font-size:14px;}
-  .gloss-short{font-size:13px;}
-  .gloss-expand{font-size:13px;}
-
-  /* Screen 5: Summary */
+  /* Screen 4: Summary */
   .summary-sub{font-size:14px;margin-bottom:1.1rem;}
   .concept-chain{grid-template-columns:1fr 1fr;gap:.4rem;}
   .chain-arrow{display:none;}
@@ -246,7 +243,10 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
 <div class="shell">
   <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
   <div class="chrome">
-    <span class="chrome-label">Sales Enablement · AI Literacy</span>
+    <div class="chrome-brand">
+      <span class="brand-dots"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <span class="brand-word">radware</span>
+    </div>
     <span class="chrome-title">Agentic AI: Understanding Your Customer's World</span>
     <span class="step-indicator" id="stepIndicator">01 / 06</span>
   </div>
@@ -264,7 +264,15 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
           <span class="chip chip-teal">What is an agent?</span>
           <span class="chip chip-blue">How it works</span>
           <span class="chip chip-amber">Architecture</span>
-          <span class="chip chip-green">Key terminology</span>
+          <span class="chip chip-green">Real example</span>
+        </div>
+        <div class="audio-bar" id="audioBar0">
+          <button class="audio-play-btn" id="audioPlayBtn0" onclick="toggleAudio(0)">▶</button>
+          <div class="audio-meta">
+            <span class="audio-label">Narration</span>
+            <div class="audio-progress-track"><div class="audio-progress-fill" id="audioProgress0"></div></div>
+          </div>
+          <span class="audio-time" id="audioTime0">0:00</span>
         </div>
       </div>
     </div>
@@ -272,8 +280,17 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     <!-- SCREEN 1: COMPARE -->
     <div class="screen" data-screen="1">
       <div class="act-header" style="max-width:860px;">
-        <span class="act-tag act-tag-blue">Module 1 of 4</span>
+        <span class="act-tag act-tag-blue">Module 1 of 3</span>
         <span class="act-h">What makes AI "agentic"?</span>
+      </div>
+      <div class="act-rule" style="max-width:860px;"></div>
+      <div class="audio-bar max-w" style="max-width:860px;" id="audioBar1">
+        <button class="audio-play-btn" id="audioPlayBtn1" onclick="toggleAudio(1)">▶</button>
+        <div class="audio-meta">
+          <span class="audio-label">Narration</span>
+          <div class="audio-progress-track"><div class="audio-progress-fill" id="audioProgress1"></div></div>
+        </div>
+        <span class="audio-time" id="audioTime1">0:00</span>
       </div>
       <div class="compare-grid">
         <div class="cmp-card">
@@ -311,8 +328,17 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     <!-- SCREEN 2: AGENT IN ACTION — BUSINESS TRIP -->
     <div class="screen" data-screen="2">
       <div class="act-header max-w">
-        <span class="act-tag act-tag-teal">Module 2 of 4</span>
+        <span class="act-tag act-tag-teal">Module 2 of 3</span>
         <span class="act-h">Example: booking a business trip</span>
+      </div>
+      <div class="act-rule max-w"></div>
+      <div class="audio-bar max-w" id="audioBar2">
+        <button class="audio-play-btn" id="audioPlayBtn2" onclick="toggleAudio(2)">▶</button>
+        <div class="audio-meta">
+          <span class="audio-label">Narration</span>
+          <div class="audio-progress-track"><div class="audio-progress-fill" id="audioProgress2"></div></div>
+        </div>
+        <span class="audio-time" id="audioTime2">0:00</span>
       </div>
       <div class="scenario-wrap">
         <div class="scenario-top">
@@ -358,8 +384,17 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     <!-- SCREEN 3: ARCHITECTURE -->
     <div class="screen" data-screen="3">
       <div class="act-header max-w">
-        <span class="act-tag act-tag-amber">Module 3 of 4</span>
+        <span class="act-tag act-tag-amber">Module 3 of 3</span>
         <span class="act-h">How an agent is built</span>
+      </div>
+      <div class="act-rule max-w"></div>
+      <div class="audio-bar max-w" id="audioBar3">
+        <button class="audio-play-btn" id="audioPlayBtn3" onclick="toggleAudio(3)">▶</button>
+        <div class="audio-meta">
+          <span class="audio-label">Narration</span>
+          <div class="audio-progress-track"><div class="audio-progress-fill" id="audioProgress3"></div></div>
+        </div>
+        <span class="audio-time" id="audioTime3">0:00</span>
       </div>
       <div class="arch-wrap">
         <div class="arch-svg-container">
@@ -370,147 +405,80 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
               </marker>
             </defs>
             <!-- YOU -->
-            <rect x="20" y="120" width="110" height="56" rx="8" fill="rgba(55,138,221,.12)" stroke="rgba(55,138,221,.5)" stroke-width="0.75"/>
-            <text x="75" y="143" text-anchor="middle" font-family="'Sora',sans-serif" font-size="12" font-weight="600" fill="#F0F4FF">You</text>
-            <text x="75" y="162" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10.5" fill="#8BA8C8">Give it a goal</text>
+            <rect x="20" y="120" width="110" height="56" rx="0" fill="rgba(55,138,221,.12)" stroke="rgba(55,138,221,.5)" stroke-width="0.75"/>
+            <text x="75" y="143" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="12" font-weight="600" fill="#F0F4FF">You</text>
+            <text x="75" y="162" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10.5" fill="#8BA8C8">Give it a goal</text>
             <line x1="130" y1="148" x2="174" y2="148" stroke="#378ADD" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
             <!-- AGENT -->
-            <rect x="176" y="40" width="170" height="228" rx="12" fill="rgba(27,189,180,.08)" stroke="rgba(27,189,180,.45)" stroke-width="1"/>
-            <text x="261" y="68" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="1.5" fill="#1BBDB4">THE AGENT</text>
-            <rect x="196" y="82" width="130" height="40" rx="6" fill="rgba(27,189,180,.1)" stroke="rgba(27,189,180,.25)" stroke-width="0.5"/>
-            <text x="261" y="99" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F9E0;  Plan</text>
-            <text x="261" y="115" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">Breaks goal into steps</text>
-            <rect x="196" y="134" width="130" height="40" rx="6" fill="rgba(27,189,180,.1)" stroke="rgba(27,189,180,.25)" stroke-width="0.5"/>
-            <text x="261" y="151" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F527;  Act</text>
-            <text x="261" y="167" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">Uses tools to do work</text>
-            <rect x="196" y="186" width="130" height="40" rx="6" fill="rgba(27,189,180,.1)" stroke="rgba(27,189,180,.25)" stroke-width="0.5"/>
-            <text x="261" y="203" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F504;  Check</text>
-            <text x="261" y="219" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">Evaluates its own output</text>
+            <rect x="176" y="40" width="170" height="228" rx="0" fill="rgba(254,175,0,.08)" stroke="rgba(254,175,0,.45)" stroke-width="1"/>
+            <text x="261" y="68" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="1.5" fill="#FEAF00">THE AGENT</text>
+            <rect x="196" y="82" width="130" height="40" rx="0" fill="rgba(254,175,0,.1)" stroke="rgba(254,175,0,.25)" stroke-width="0.5"/>
+            <text x="261" y="99" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F9E0;  Plan</text>
+            <text x="261" y="115" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">Breaks goal into steps</text>
+            <rect x="196" y="134" width="130" height="40" rx="0" fill="rgba(254,175,0,.1)" stroke="rgba(254,175,0,.25)" stroke-width="0.5"/>
+            <text x="261" y="151" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F527;  Act</text>
+            <text x="261" y="167" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">Uses tools to do work</text>
+            <rect x="196" y="186" width="130" height="40" rx="0" fill="rgba(254,175,0,.1)" stroke="rgba(254,175,0,.25)" stroke-width="0.5"/>
+            <text x="261" y="203" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F504;  Check</text>
+            <text x="261" y="219" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">Evaluates its own output</text>
             <!-- loop arrow -->
-            <path d="M196 206 Q150 206 150 154 Q150 102 196 102" fill="none" stroke="#1BBDB4" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
-            <text x="144" y="212" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9.5" font-weight="500" fill="#5DCAA5">loop</text>
+            <path d="M196 206 Q150 206 150 154 Q150 102 196 102" fill="none" stroke="#FEAF00" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+            <text x="144" y="212" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9.5" font-weight="500" fill="#FFD073">loop</text>
             <!-- agent to tools -->
-            <line x1="346" y1="148" x2="390" y2="148" stroke="#1BBDB4" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+            <line x1="346" y1="148" x2="390" y2="148" stroke="#FEAF00" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
             <!-- TOOLS -->
-            <rect x="392" y="40" width="168" height="228" rx="12" fill="rgba(239,159,39,.05)" stroke="rgba(239,159,39,.35)" stroke-width="1"/>
-            <text x="476" y="68" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="1.5" fill="#EF9F27">TOOLS</text>
-            <rect x="412" y="82" width="128" height="36" rx="6" fill="rgba(239,159,39,.08)" stroke="rgba(239,159,39,.2)" stroke-width="0.5"/>
-            <text x="476" y="97" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F50D;  Search &amp; browse</text>
-            <text x="476" y="112" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">Web, docs, databases</text>
-            <rect x="412" y="128" width="128" height="36" rx="6" fill="rgba(239,159,39,.08)" stroke="rgba(239,159,39,.2)" stroke-width="0.5"/>
-            <text x="476" y="143" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F4E7;  Communicate</text>
-            <text x="476" y="158" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">Email, Slack, calendar</text>
-            <rect x="412" y="174" width="128" height="36" rx="6" fill="rgba(239,159,39,.08)" stroke="rgba(239,159,39,.2)" stroke-width="0.5"/>
-            <text x="476" y="189" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F5C2;  Read &amp; write</text>
-            <text x="476" y="204" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">CRM, files, spreadsheets</text>
-            <rect x="412" y="220" width="128" height="36" rx="6" fill="rgba(239,159,39,.08)" stroke="rgba(239,159,39,.2)" stroke-width="0.5"/>
-            <text x="476" y="235" text-anchor="middle" font-family="'Sora',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x2699;&#xFE0F;  Run code</text>
-            <text x="476" y="250" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#8BA8C8">Scripts, APIs, automations</text>
+            <rect x="392" y="40" width="168" height="228" rx="0" fill="rgba(50,128,150,.05)" stroke="rgba(50,128,150,.35)" stroke-width="1"/>
+            <text x="476" y="68" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="1.5" fill="#328096">TOOLS</text>
+            <rect x="412" y="82" width="128" height="36" rx="0" fill="rgba(50,128,150,.08)" stroke="rgba(50,128,150,.2)" stroke-width="0.5"/>
+            <text x="476" y="97" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F50D;  Search &amp; browse</text>
+            <text x="476" y="112" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">Web, docs, databases</text>
+            <rect x="412" y="128" width="128" height="36" rx="0" fill="rgba(50,128,150,.08)" stroke="rgba(50,128,150,.2)" stroke-width="0.5"/>
+            <text x="476" y="143" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F4E7;  Communicate</text>
+            <text x="476" y="158" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">Email, Slack, calendar</text>
+            <rect x="412" y="174" width="128" height="36" rx="0" fill="rgba(50,128,150,.08)" stroke="rgba(50,128,150,.2)" stroke-width="0.5"/>
+            <text x="476" y="189" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x1F5C2;  Read &amp; write</text>
+            <text x="476" y="204" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">CRM, files, spreadsheets</text>
+            <rect x="412" y="220" width="128" height="36" rx="0" fill="rgba(50,128,150,.08)" stroke="rgba(50,128,150,.2)" stroke-width="0.5"/>
+            <text x="476" y="235" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="11" font-weight="600" fill="#F0F4FF">&#x2699;&#xFE0F;  Run code</text>
+            <text x="476" y="250" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#8BA8C8">Scripts, APIs, automations</text>
             <!-- tools to memory -->
-            <line x1="560" y1="148" x2="602" y2="148" stroke="#EF9F27" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+            <line x1="560" y1="148" x2="602" y2="148" stroke="#328096" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
             <!-- MEMORY -->
-            <rect x="604" y="82" width="120" height="130" rx="10" fill="rgba(127,119,221,.07)" stroke="rgba(127,119,221,.4)" stroke-width="1"/>
+            <rect x="604" y="82" width="120" height="130" rx="0" fill="rgba(127,119,221,.07)" stroke="rgba(127,119,221,.4)" stroke-width="1"/>
             <text x="664" y="107" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9" letter-spacing="1.5" fill="#7F77DD">MEMORY</text>
-            <text x="664" y="128" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#b0c4de">What happened</text>
-            <text x="664" y="146" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#b0c4de">What was found</text>
-            <text x="664" y="164" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#b0c4de">What worked</text>
-            <text x="664" y="182" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10" fill="#b0c4de">What's still to do</text>
+            <text x="664" y="128" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#b0c4de">What happened</text>
+            <text x="664" y="146" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#b0c4de">What was found</text>
+            <text x="664" y="164" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#b0c4de">What worked</text>
+            <text x="664" y="182" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10" fill="#b0c4de">What's still to do</text>
             <!-- memory back to agent — straight lines: up, left, down into Agent top-centre -->
             <polyline points="664,82 664,18 261,18 261,40" fill="none" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#arr)"/>
             <!-- memory label — centred on the horizontal segment -->
             <text x="462" y="13" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9.5" font-weight="500" fill="#AFA9EC">memory informs next step</text>
             <!-- output arrow — from right edge of memory (x=724) to left edge of result (x=734) -->
-            <line x1="724" y1="148" x2="732" y2="148" stroke="rgba(46,158,107,.7)" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+            <line x1="724" y1="148" x2="732" y2="148" stroke="rgba(91,154,60,.7)" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
             <!-- RESULT -->
-            <rect x="734" y="120" width="106" height="56" rx="8" fill="rgba(46,158,107,.1)" stroke="rgba(46,158,107,.45)" stroke-width="0.75"/>
-            <text x="787" y="143" text-anchor="middle" font-family="'Sora',sans-serif" font-size="12" font-weight="600" fill="#F0F4FF">Result</text>
-            <text x="787" y="162" text-anchor="middle" font-family="'Sora',sans-serif" font-size="10.5" fill="#8BA8C8">Task complete &#x2713;</text>
+            <rect x="734" y="120" width="106" height="56" rx="0" fill="rgba(91,154,60,.1)" stroke="rgba(91,154,60,.45)" stroke-width="0.75"/>
+            <text x="787" y="143" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="12" font-weight="600" fill="#F0F4FF">Result</text>
+            <text x="787" y="162" text-anchor="middle" font-family="'Calibri',sans-serif" font-size="10.5" fill="#8BA8C8">Task complete &#x2713;</text>
           </svg>
         </div>
         <div class="arch-label">The agent loops through Plan &#8594; Act &#8594; Check until the task is done &#8212; automatically</div>
       </div>
     </div>
 
-    <!-- SCREEN 4: GLOSSARY -->
+    <!-- SCREEN 4: SUMMARY -->
     <div class="screen" data-screen="4">
-      <div class="act-header max-w">
-        <span class="act-tag act-tag-green">Module 4 of 4</span>
-        <span class="act-h">Key terminology &#8212; words you&#8217;ll hear constantly</span>
-      </div>
-      <div class="glossary-instruction max-w">
-        <span class="glossary-instruction-icon">👆</span>
-        <span class="glossary-instruction-text"><strong>Click any term</strong> to expand a real-world example from customer conversations</span>
-      </div>
-      <div class="glossary-grid max-w" id="glossGrid">
-
-        <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term">
-            <span class="gloss-badge gb-teal">Core</span>
-            <div class="gloss-word-row"><span class="gloss-word">Agent</span><span class="gloss-chevron">&#9660;</span></div>
-          </div>
-          <div class="gloss-short">AI that pursues a goal autonomously — planning and acting across many steps without a human directing each one.</div>
-          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>&#8220;Book me a flight, find a hotel, and send me the itinerary&#8221; — completed end-to-end, no hand-holding.</div>
-        </div>
-
-        <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term">
-            <span class="gloss-badge gb-teal">Core</span>
-            <div class="gloss-word-row"><span class="gloss-word">Orchestrator</span><span class="gloss-chevron">&#9660;</span></div>
-          </div>
-          <div class="gloss-short">The "manager" agent that breaks down a goal and delegates sub-tasks to specialist agents.</div>
-          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>One orchestrator coordinates a research agent, a writing agent, and a send agent — each doing one thing well.</div>
-        </div>
-
-        <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term">
-            <span class="gloss-badge gb-amber">Architecture</span>
-            <div class="gloss-word-row"><span class="gloss-word">Tool call</span><span class="gloss-chevron">&#9660;</span></div>
-          </div>
-          <div class="gloss-short">When an agent reaches into a real system — an API, database, inbox, or file — to read or take action.</div>
-          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>Querying a CRM, sending an email, or booking via a travel API are all tool calls. Each one is a real-world action.</div>
-        </div>
-
-        <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term">
-            <span class="gloss-badge gb-amber">Architecture</span>
-            <div class="gloss-word-row"><span class="gloss-word">Context window</span><span class="gloss-chevron">&#9660;</span></div>
-          </div>
-          <div class="gloss-short">Everything the agent can "see" at once: the task, past steps, tool results, and instructions.</div>
-          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>Like a desk — the agent can only work with what&#8217;s on it. Information not in the window is invisible to it.</div>
-        </div>
-
-        <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term">
-            <span class="gloss-badge gb-blue">Behaviour</span>
-            <div class="gloss-word-row"><span class="gloss-word">Human-in-the-loop</span><span class="gloss-chevron">&#9660;</span></div>
-          </div>
-          <div class="gloss-short">A checkpoint where the agent pauses and waits for human approval before proceeding.</div>
-          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>&#8220;Before you send that external email, confirm with me first.&#8221; Oversight without removing automation.</div>
-        </div>
-
-        <div class="gloss-card" onclick="toggleGloss(this)">
-          <div class="gloss-term">
-            <span class="gloss-badge gb-green">Trust</span>
-            <div class="gloss-word-row"><span class="gloss-word">Least privilege</span><span class="gloss-chevron">&#9660;</span></div>
-          </div>
-          <div class="gloss-short">An agent should only have access to what it needs for its specific task — nothing more.</div>
-          <div class="gloss-expand"><div class="gloss-expand-label">Example</div>An agent that reads emails shouldn&#8217;t also be able to delete them or access finance systems. Scope = safety.</div>
-        </div>
-
-      </div>
-      <div class="gloss-progress max-w">
-        <div class="gloss-progress-dots" id="glossDots">
-          <div class="gloss-pdot"></div><div class="gloss-pdot"></div><div class="gloss-pdot"></div>
-          <div class="gloss-pdot"></div><div class="gloss-pdot"></div><div class="gloss-pdot"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SCREEN 5: SUMMARY -->
-    <div class="screen" data-screen="5">
       <div class="summary-wrap">
         <div class="summary-h">What you now know</div>
         <div class="summary-sub">The mental model your customers are already working from</div>
+        <div class="audio-bar" id="audioBar4" style="text-align:left;">
+          <button class="audio-play-btn" id="audioPlayBtn4" onclick="toggleAudio(4)">▶</button>
+          <div class="audio-meta">
+            <span class="audio-label">Narration</span>
+            <div class="audio-progress-track"><div class="audio-progress-fill" id="audioProgress4"></div></div>
+          </div>
+          <span class="audio-time" id="audioTime4">0:00</span>
+        </div>
         <div class="concept-chain">
           <div class="cc-node">
             <div class="cc-icon">&#127919;</div>
@@ -537,14 +505,12 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
           </div>
         </div>
         <div class="key-points">
-          <div class="kp-h">Six terms you&#8217;ll hear in every customer conversation</div>
+          <div class="kp-h">What to listen for in your next customer conversation</div>
           <div class="kp-grid">
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Agent</span><span class="kp-def">&#8212; AI that acts autonomously toward a goal</span></div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Orchestrator</span><span class="kp-def">&#8212; the "manager" coordinating other agents</span></div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Tool call</span><span class="kp-def">&#8212; when the agent uses an external system</span></div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Context window</span><span class="kp-def">&#8212; what the agent can see at any moment</span></div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Human-in-the-loop</span><span class="kp-def">&#8212; approval checkpoints in the workflow</span></div>
-            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">Least privilege</span><span class="kp-def">&#8212; agents only get the access they need</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">"We give it a goal"</span><span class="kp-def">&#8212; they're describing agentic AI, not a chatbot</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">"It books / sends / updates"</span><span class="kp-def">&#8212; the agent is taking real actions across systems</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">"It runs on its own"</span><span class="kp-def">&#8212; that's the plan, act, check loop at work</span></div>
+            <div class="kp-item"><span class="kp-bullet">&#8594;</span><span class="kp-term">"It remembers what happened"</span><span class="kp-def">&#8212; that's memory feeding the next decision</span></div>
           </div>
         </div>
         <div class="complete-badge">&#10003; Module complete &#8212; Agentic AI for Sales</div>
@@ -558,12 +524,79 @@ html,body{height:100%;font-family:var(--sans);background:var(--dark);color:var(-
     <div class="dot-nav" id="dotNav"></div>
     <button class="btn btn-primary" id="nextBtn" onclick="goNext()">Next &#8594;</button>
   </div>
+  <div class="footer-stripe"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 </div>
 
 <script>
-const TOTAL=6;let current=0;let agentRun=false;
+const TOTAL=5;let current=0;let agentRun=false;
 const dotNav=document.getElementById('dotNav');
 for(let i=0;i<TOTAL;i++){const d=document.createElement('div');d.className='dot'+(i===0?' active':'');d.onclick=()=>goTo(i);dotNav.appendChild(d);}
+
+/* ── SPEAKER AUDIO ENGINE ──
+   Drop MP3 files into an /audio folder next to this HTML file, named
+   screen0.mp3 through screen4.mp3, and they will play automatically.
+   Until files are added, the play button will simply show an error state. */
+const AUDIO_SRC = {
+  0: 'audio/screen1.mp3',
+  1: null,
+  2: 'audio/screen2.mp3',
+  3: 'audio/screen3.mp3',
+  4: 'audio/screen4.mp3',
+};
+const audioEls = {};
+function fmtTime(s){
+  if(!isFinite(s))return '0:00';
+  const m=Math.floor(s/60), sec=Math.floor(s%60);
+  return m+':'+String(sec).padStart(2,'0');
+}
+function getAudio(n){
+  if(audioEls[n]) return audioEls[n];
+  const a = new Audio(AUDIO_SRC[n]);
+  a.preload = 'none';
+  const fill = document.getElementById('audioProgress'+n);
+  const time = document.getElementById('audioTime'+n);
+  const btn = document.getElementById('audioPlayBtn'+n);
+  a.addEventListener('timeupdate', ()=>{
+    if(a.duration){ fill.style.width = (a.currentTime/a.duration*100)+'%'; }
+    time.textContent = fmtTime(a.currentTime);
+  });
+  a.addEventListener('loadedmetadata', ()=>{ time.textContent = fmtTime(a.duration); });
+  a.addEventListener('ended', ()=>{
+    btn.textContent='▶'; btn.classList.remove('playing');
+    fill.style.width='0%'; time.textContent = fmtTime(a.duration||0);
+  });
+  a.addEventListener('error', ()=>{
+    time.textContent = 'no audio yet';
+  });
+  audioEls[n] = a;
+  return a;
+}
+function pauseAllAudio(except){
+  Object.keys(audioEls).forEach(k=>{
+    const n = parseInt(k,10);
+    if(n===except) return;
+    const a = audioEls[n];
+    if(!a.paused){
+      a.pause();
+      const btn=document.getElementById('audioPlayBtn'+n);
+      if(btn){btn.textContent='▶';btn.classList.remove('playing');}
+    }
+  });
+}
+function toggleAudio(n){
+  if(!AUDIO_SRC[n]){ document.getElementById('audioTime'+n).textContent='no audio'; return; }
+  const a = getAudio(n);
+  const btn = document.getElementById('audioPlayBtn'+n);
+  if(a.paused){
+    pauseAllAudio(n);
+    a.play().catch(()=>{ document.getElementById('audioTime'+n).textContent='no audio yet'; });
+    btn.textContent='❚❚'; btn.classList.add('playing');
+  }else{
+    a.pause();
+    btn.textContent='▶'; btn.classList.remove('playing');
+  }
+}
+
 function updateUI(){
   document.getElementById('progressFill').style.width=((current/(TOTAL-1))*100)+'%';
   document.getElementById('stepIndicator').textContent=String(current+1).padStart(2,'0')+' / '+String(TOTAL).padStart(2,'0');
@@ -575,6 +608,7 @@ function updateUI(){
 }
 function goTo(n){
   if(n<0||n>=TOTAL)return;
+  pauseAllAudio(-1);
   const all=document.querySelectorAll('.screen');const old=current;const dir=n>old?1:-1;
   all[old].classList.remove('active');
   if(dir>0){all[old].classList.add('exit-left');setTimeout(()=>all[old].classList.remove('exit-left'),450);}
@@ -604,19 +638,6 @@ function runAgent(){
       },900);}
     },i*900);
   });
-}
-function toggleGloss(card){
-  card.classList.toggle('open');
-  snd.click();
-  const cards=document.querySelectorAll('#glossGrid .gloss-card');
-  const dots=document.querySelectorAll('#glossDots .gloss-pdot');
-  let seen=0;
-  cards.forEach((c,i)=>{
-    if(c.classList.contains('open')){seen++;if(dots[i])dots[i].classList.add('seen');}
-    else{if(dots[i])dots[i].classList.remove('seen');}
-  });
-  const txt=document.getElementById('glossProgressText');
-  if(txt)txt.textContent=seen+' of 6 opened';
 }
 updateUI();
 
